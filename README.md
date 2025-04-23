@@ -4,14 +4,14 @@
 
 ## Features
 
-- Generate secure passwords optimized for different environments, at the time being:
+- Generates secure passwords optimized for different environments, at the time being:
   - Linux
   - Oracle
   - PowerShell
+- Avoids special symbol characters that may be misinterpreted on the specified environment.
 - Supports variable or fixed password lengths.
 - Allows defining the number of passwords to generate.
-- Ensures safe handling of special characters.
-- Includes options to suppress warnings or add cautionary notes.
+- The major parameters can be tuned for your requirements in almost one place of block in the script.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ Run the script with the following options:
 ### Options:
 - `-f`: Optimization flavor (Optional)
   - Supports `linux`, `oracle`, or `powershell`.
-  - Default: No specific optimization.
+  - Default: Only minimal general optimizations.
 - `-n`: Number of passwords to generate (Optional)
   - Default: 3.
 - `-l`: Length of each password (Optional)
