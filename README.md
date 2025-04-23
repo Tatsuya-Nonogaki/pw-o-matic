@@ -30,19 +30,6 @@
 3. **Warnings**:
    - Provides cautionary messages for additional security considerations.
 
-## Installation
-
-1. Ensure `apg` is installed on your system.
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/Tatsuya-Nonogaki/pw-o-matic
-   cd pw-o-matic
-   ```
-3. Make the script executable:
-   ```bash
-   chmod +x pw-o-matic.sh
-   ```
-
 ## Usage
 
 Run the script with the following options:
