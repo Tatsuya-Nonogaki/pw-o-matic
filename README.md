@@ -4,32 +4,22 @@
 
 ## Features
 
+- Relies on `apg` to generate passwords.
+- Leveraging `apg` capability to produce passwords that consist of phrases not in the dictionary but pronounceable, i.e. just barely memorable.
 - Generates secure passwords optimized for different environments, at the time being:
   - Linux
   - Oracle
   - PowerShell
-- Avoids special symbol characters that may be misinterpreted on the specified environment.
+- Avoids special symbol characters that may be misinterpreted in the specified environment.
+- Ensures passwords are compliant with environment constraints.
 - Supports variable or fixed password lengths.
-- Allows defining the number of passwords to generate.
+- Allows defining the number of passwords to generate at run time.
+- Provides cautionary messages for additional security considerations.
 - The major parameters can be tuned for your requirements in almost one place of block in the script.
 
 ## Requirements
 
 - [apg](https://github.com/jabenninghoff/apg) (Automated Password Generator)
-
-## How It Works
-
-1. **Password Generation**:
-   - Relies on `apg` to generate passwords.
-   - Tailors password options based on the chosen environment (`-f` flavor).
-
-2. **Optimization**:
-   - By utilizing the functionality of `apg`, it is possible to generate passwords consist of phrases that are not in the dictionary but pronounceable, i.e. just barely memorable.
-   - Filters unsafe symbols for specific environments.
-   - Ensures passwords are secure and compliant with environment constraints.
-
-3. **Warnings**:
-   - Provides cautionary messages for additional security considerations.
 
 ## Usage
 
