@@ -24,6 +24,7 @@
    - Tailors password options based on the chosen environment (`-f` flavor).
 
 2. **Optimization**:
+   - By utilizing the functionality of `apg`, it is possible to generate passwords consist of phrases that are not in the dictionary but pronounceable, i.e. just barely memorable.
    - Filters unsafe symbols for specific environments.
    - Ensures passwords are secure and compliant with environment constraints.
 
