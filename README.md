@@ -11,11 +11,12 @@
   - Oracle
   - PowerShell
 - Avoids special symbol characters that may be misinterpreted in the specified environment.
+- Simplifies handling of special symbols by using an inclusion list to dynamically calculate the exclusions required by `apg`. This approach shortens the list, reduces complexity, and avoids the need for extensive escaping.
 - Ensures passwords are compliant with environment constraints.
 - Supports variable or fixed password lengths.
 - Allows defining the number of passwords to generate at run time.
 - Provides cautionary messages for additional security considerations.
-- The major parameters can be tuned for your requirements in almost one place of block in the script.
+- The major parameters can be tuned for your requirements in a bunch of variable definitions in the script.
 
 ## Requirements
 
