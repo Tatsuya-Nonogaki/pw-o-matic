@@ -5,7 +5,7 @@
 ## Features
 
 - Relies on `apg` to generate passwords.
-- Leveraging `apg` capability to produce passwords that consist of phrases not in the dictionary but pronounceable, i.e. just barely memorable.
+- Leveraging `apg` capability to produce passwords that consist of pronounceable syllables but scarcely lexical, i.e. just barely memorable.
 - Generates secure passwords optimized for different environments, at the time being:
   - Linux
   - Oracle
