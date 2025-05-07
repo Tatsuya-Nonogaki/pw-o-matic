@@ -1,6 +1,6 @@
 # pw-o-matic
 
-**pw-o-matic** is an optimized password generator script written in Bash. It allows users to generate secure passwords tailored to specific environments and requirements with ease of customization.
+**pw-o-matic** is an optimized password generator script written in Bash. It allows users to generate secure passwords tailored to specific environments and requirements with ease of use and customization.
 
 ## Features
 
@@ -10,6 +10,7 @@
   - Linux
   - Oracle
   - PowerShell
+  - relax (i.e., fundamental and minimal complexity)
 - Avoids special symbol characters that may be misinterpreted in the specified environment.
 - Simplifies handling of special symbols by using an inclusion list to dynamically calculate the exclusions required by `apg`. This approach shortens the list, reduces complexity, and avoids the need for extensive escaping.
 - Ensures passwords are compliant with environment constraints.
@@ -32,7 +33,7 @@ Run the script with the following options:
 
 ### Options:
 - `-f`: Optimization flavor (Optional)
-  - Supports `linux`, `oracle`, or `powershell`.
+  - Supports `linux`, `oracle`, `powershell` and `relax` mode.
   - Default: Only minimal general optimizations.
 - `-n`: Number of passwords to generate (Optional)
   - Default: 3.
