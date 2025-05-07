@@ -1,15 +1,16 @@
 #!/bin/bash
 # 'pw-o-matic', an Optimized Password Generator, generates optimized password strings
 # according to the given type of environment flavor and various options. It is also
-# designed with ease of tuning in mind.
+# designed with ease of use and customization in mind.
 # *REQUIREMENTS - apg (Automated Password Generator) (https://github.com/jabenninghoff/apg)
-# v1.1.4
+# v1.1.5
 
 show_help () {
     cat <<EOM
 Usage: $(basename $0) [-f FLAVOR] [-n NUM_OF_OUTPUT] [-l PW_LENGTH]
-  -f: (Optional) Optimization flavor, can be 'linux', 'oracle' or 'powershell'. Lesser
-       optimization will be done if not specified or the argument is out of range.
+  -f: (Optional) Optimization flavor, can be 'linux', 'oracle', 'powershell' or
+      'relax' mode. Lesser optimization will be done if not specified or the argument
+      is out of range.
   -n: (Optional) Number of samples to output, defaults to 3.
   -l: (Optional) Length of each password to generate, MUST be >= 4. By default, the
       script generates variable length passwords in a specific range per FLAVOR. Use
@@ -47,6 +48,8 @@ shift $(($OPTIND -1))
 OPTIONS="-a 0 -n $OUTNUM -t"   # shared apg options
 DEFAULT_LEN='-m 13 -x 16'      # No-Flavor: legth options for apg
 DEFAULT_AUX='-M SNCL -E \\'    # No-Flavor: other apg options
+RELAX_LEN='-m 9 -x 12'         # Relax-mode: length options for apg
+RELAX_AUX='-M NL'              # Relax-mode: other apg options
 LINUX_LEN='-m 13 -x 16'        # Linux: length options for apg
 LINUX_AUX='-M SNCL'            # Linux: other apg options
 LINUX_SAFE_SYMBOLS='#%+/:=?@_' # Linux: safe symbol characters
@@ -123,6 +126,11 @@ if [ -n "$FLAVOR" ]; then
         excludelist=$(build_exclude_list $PS_SAFE_SYMBOLS)
         echo "Optimized for PowerShell"
         OPTIONS+=" $length $PS_AUX -E $excludelist"
+        ;;
+      relax)
+        length=${length:=$RELAX_LEN}
+        echo "Optimized for Relax mode"
+        OPTIONS+=" $length $RELAX_AUX"
         ;;
       *)
         default_flavor_opts
