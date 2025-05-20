@@ -1,4 +1,4 @@
-# pw-o-matic
+# [pw-o-matic](https://github.com/Tatsuya-Nonogaki/pw-o-matic)
 
 **pw-o-matic** is an optimized password generator script written in Bash. It allows users to generate secure passwords tailored to specific environments and requirements with ease of use and customization.
 
