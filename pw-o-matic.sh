@@ -1,5 +1,5 @@
 #!/bin/bash
-# 'pw-o-matic', an Optimized Password Generator, generates optimized password strings
+# 'pw-o-matic', an optimized password generator, generates optimized password strings
 # according to the given type of environment flavor and various options. It is also
 # designed with ease of use and customization in mind.
 # *REQUIREMENTS - apg (Automated Password Generator) (https://github.com/jabenninghoff/apg)
