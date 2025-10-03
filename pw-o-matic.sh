@@ -3,13 +3,13 @@
 # according to the given type of environment flavor and various options. It is also
 # designed with ease of use and customization in mind.
 # *REQUIREMENTS - apg (Automated Password Generator) (https://github.com/jabenninghoff/apg)
-# v1.1.5
+# v1.1.6
 
 show_help () {
     cat <<EOM
 Usage: $(basename $0) [-f FLAVOR] [-n NUM_OF_OUTPUT] [-l PW_LENGTH]
-  -f: (Optional) Optimization flavor, can be 'linux', 'oracle', 'powershell' or
-      'relax' mode. Lesser optimization will be done if not specified or the argument
+  -f: (Optional) Optimization flavor, can be 'linux', 'oracle', 'powershell', 'relax' or
+      'simple' mode. Lesser optimization will be done if not specified or the argument
       is out of range.
   -n: (Optional) Number of samples to output, defaults to 3.
   -l: (Optional) Length of each password to generate, MUST be >= 4. By default, the
@@ -49,7 +49,9 @@ OPTIONS="-a 0 -n $OUTNUM -t"   # shared apg options
 DEFAULT_LEN='-m 13 -x 16'      # No-Flavor: legth options for apg
 DEFAULT_AUX='-M SNCL -E \\'    # No-Flavor: other apg options
 RELAX_LEN='-m 9 -x 12'         # Relax-mode: length options for apg
-RELAX_AUX='-M NL'              # Relax-mode: other apg options
+RELAX_AUX='-M NlC'             # Relax-mode: other apg options
+SIMPLE_LEN='-m 9 -x 12'        # Simple-mode: length options for apg
+SIMPLE_AUX='-M NL'             # Simple-mode: other apg options
 LINUX_LEN='-m 13 -x 16'        # Linux: length options for apg
 LINUX_AUX='-M SNCL'            # Linux: other apg options
 LINUX_SAFE_SYMBOLS='#%+/:=?@_' # Linux: safe symbol characters
@@ -131,6 +133,11 @@ if [ -n "$FLAVOR" ]; then
         length=${length:=$RELAX_LEN}
         echo "Optimized for Relax mode"
         OPTIONS+=" $length $RELAX_AUX"
+        ;;
+      simple)
+        length=${length:=$SIMPLE_LEN}
+        echo "Optimized for Simple mode"
+        OPTIONS+=" $length $SIMPLE_AUX"
         ;;
       *)
         default_flavor_opts
