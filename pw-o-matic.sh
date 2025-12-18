@@ -165,14 +165,46 @@ if [ "$FLAVOR" = "oracle" ]; then
                 pw="${pw:1}${pw:0:1}"
                 ((count++))
             done
+            
+            # If rotation occurred and we have pronunciation comments, rotate them too
+            if [[ $count -gt 0 && -n "$comment" ]]; then
+                # Remove parentheses from comment
+                pron="${comment#\(}"
+                pron="${pron%\)}"
+                
+                # Split pronunciation on '-' delimiter into array
+                IFS='-' read -ra pron_parts <<< "$pron"
+                
+                # Only rotate if we have pronunciation parts
+                if [[ ${#pron_parts[@]} -gt 0 ]]; then
+                    # Rotate pronunciation parts by the same count
+                    rotation_count=$count
+                    pron_len=${#pron_parts[@]}
+                    
+                    # Ensure rotation count doesn't exceed array length
+                    if [[ $rotation_count -ge $pron_len ]]; then
+                        rotation_count=$((rotation_count % pron_len))
+                    fi
+                    
+                    # Perform rotation by rearranging array elements
+                    if [[ $rotation_count -gt 0 ]]; then
+                        rotated_pron=()
+                        for (( i=rotation_count; i<pron_len; i++ )); do
+                            rotated_pron+=("${pron_parts[$i]}")
+                        done
+                        for (( i=0; i<rotation_count; i++ )); do
+                            rotated_pron+=("${pron_parts[$i]}")
+                        done
+                        
+                        # Reconstruct comment with rotated pronunciation
+                        new_pron=$(IFS='-'; echo "${rotated_pron[*]}")
+                        comment="($new_pron)"
+                    fi
+                fi
+            fi
         fi
 
         if [ ! $NOWARN ]; then
-            # If apg option includes "pronounceable" and "append pronunciation note" and symbols rotation actually took place,
-            if [[ $count -gt 0 && "$OPTIONS" =~ ([[:blank:]]|^)-t([[:blank:]]|$) && ! "$OPTIONS" =~ ([[:blank:]]|^)-a[[:blank:]]+1([[:blank:]]|$) ]]; then
-                warn='Pronunciation may not match password.'
-            fi
-
             # If the first character is still not an alphabet,
             if [[ ! "${pw:0:1}" =~ [a-zA-Z] ]]; then
                 warn+="${warn:+ }Be careful when using unquoted!"
