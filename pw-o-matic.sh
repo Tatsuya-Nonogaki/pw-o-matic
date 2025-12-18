@@ -181,8 +181,8 @@ if [ "$FLAVOR" = "oracle" ]; then
                     rotation_count=$count
                     pron_len=${#pron_parts[@]}
                     
-                    # Ensure rotation count doesn't exceed array length
-                    if [[ $rotation_count -ge $pron_len ]]; then
+                    # Ensure rotation count doesn't exceed array length and avoid division by zero
+                    if [[ $pron_len -gt 0 && $rotation_count -ge $pron_len ]]; then
                         rotation_count=$((rotation_count % pron_len))
                     fi
                     
@@ -197,7 +197,7 @@ if [ "$FLAVOR" = "oracle" ]; then
                         done
                         
                         # Reconstruct comment with rotated pronunciation
-                        new_pron=$(IFS='-'; echo "${rotated_pron[*]}")
+                        new_pron=$(IFS='-'; printf '%s' "${rotated_pron[*]}")
                         comment="($new_pron)"
                     fi
                 fi
