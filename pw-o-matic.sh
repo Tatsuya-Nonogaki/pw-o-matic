@@ -154,48 +154,36 @@ if [ "$FLAVOR" = "oracle" ]; then
     while IFS= read -r line; do
         comment=""
         warn=""
-        count=-1
+        count=0
         read pw comment < <(echo $line)
 
+        # Split pronunciation before the loop
+        if [[ -n "$comment" ]]; then
+            pron="${comment#\(}"
+            pron="${pron%\)}"
+            IFS='-' read -r -a pron_parts <<< "$pron"
+        else
+            pron_parts=()
+        fi
+
         # If the first character is not an alphabet, sequentially move to the end
-        if [[ "$pw" =~ [a-zA-Z] ]]; then
-            count=0
-            MAX_ROTATIONS=${#pw}
-            while [[ ! "${pw:0:1}" =~ [a-zA-Z] && $count -lt $MAX_ROTATIONS ]]; do
-                pw="${pw:1}${pw:0:1}"
-                ((count++))
-            done
+        MAX_ROTATIONS=${#pw}
+        while [[ ! "${pw:0:1}" =~ [a-zA-Z] && $count -lt $MAX_ROTATIONS ]]; do
+            # Rotate password
+            pw="${pw:1}${pw:0:1}"
 
-            # If rotation occurred and we have pronunciation comments, rotate them too
-            if [[ $count -gt 0 && -n "$comment" ]]; then
-                pron="${comment#\(}"
-                pron="${pron%\)}"
-                IFS='-' read -ra pron_parts <<< "$pron"
-
-                if [[ ${#pron_parts[@]} -gt 0 ]]; then
-                    rotation_count=$count
-                    pron_len=${#pron_parts[@]}
-
-                    # Ensure rotation count doesn't exceed array length and avoid division by zero
-                    if [[ $pron_len -gt 0 && $rotation_count -ge $pron_len ]]; then
-                        rotation_count=$((rotation_count % pron_len))
-                    fi
-
-                    # Reconstruct comment by rearranging array elements
-                    if [[ $rotation_count -gt 0 ]]; then
-                        rotated_pron=()
-                        for (( i=rotation_count; i<pron_len; i++ )); do
-                            rotated_pron+=("${pron_parts[$i]}")
-                        done
-                        for (( i=0; i<rotation_count; i++ )); do
-                            rotated_pron+=("${pron_parts[$i]}")
-                        done
-
-                        new_pron=$(IFS='-'; printf '%s' "${rotated_pron[*]}")
-                        comment="($new_pron)"
-                    fi
-                fi
+            # Rotate pronunciation parts in parallel
+            if [[ ${#pron_parts[@]} -gt 0 ]]; then
+                pron_parts=("${pron_parts[@]:1}" "${pron_parts[0]}")
             fi
+
+            ((count++))
+        done
+
+        # Rejoin pronunciation parts
+        if [[ ${#pron_parts[@]} -gt 0 ]]; then
+            rotated_comment=$(IFS=- ; echo "${pron_parts[*]}")
+            comment="($rotated_comment)"
         fi
 
         if [ ! $NOWARN ]; then
