@@ -72,7 +72,7 @@ Generate Oracle-optimized passwords:
 $ ./pw-o-matic.sh -f oracle
 Optimized for oracle
 COMMAND : "apg -a 0 -n 3 -t -m 10 -x 14 -M sNCL -E !\"#$%&\'()*+,-./:;<=>?@[\]`{|}~"
-GrazIvyasEed_9 (NINE-Graz-Iv-yas-Eed-UNDERSCORE) [Pronunciation may not match password.]
+GrazIvyasEed_9 (Graz-Iv-yas-Eed-UNDERSCORE-NINE)
 IfurheyQuiof0 (If-ur-hey-Qui-of-ZERO)
 KredthuvEtOn7 (Kredth-uv-Et-On-SEVEN)
 ```
