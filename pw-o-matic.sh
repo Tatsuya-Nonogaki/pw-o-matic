@@ -157,33 +157,36 @@ if [ "$FLAVOR" = "oracle" ]; then
         count=0
         read pw comment < <(echo $line)
 
-        # Split pronunciation before the loop
-        if [[ -n "$comment" ]]; then
-            pron="${comment#\(}"
-            pron="${pron%\)}"
-            IFS='-' read -r -a pron_parts <<< "$pron"
-        else
-            pron_parts=()
-        fi
-
-        # If the first character is not an alphabet, sequentially move to the end
-        MAX_ROTATIONS=${#pw}
-        while [[ ! "${pw:0:1}" =~ [a-zA-Z] && $count -lt $MAX_ROTATIONS ]]; do
-            # Rotate password
-            pw="${pw:1}${pw:0:1}"
-
-            # Rotate pronunciation parts in parallel
-            if [[ ${#pron_parts[@]} -gt 0 ]]; then
-                pron_parts=("${pron_parts[@]:1}" "${pron_parts[0]}")
+        # Only process if password contains at least one alphabetic character
+        if [[ "$pw" =~ [a-zA-Z] ]]; then
+            # Split pronunciation before the loop
+            if [[ -n "$comment" ]]; then
+                pron="${comment#\(}"
+                pron="${pron%\)}"
+                IFS='-' read -r -a pron_parts <<< "$pron"
+            else
+                pron_parts=()
             fi
 
-            ((count++))
-        done
+            # If the first character is not an alphabet, sequentially move to the end
+            MAX_ROTATIONS=${#pw}
+            while [[ ! "${pw:0:1}" =~ [a-zA-Z] && $count -lt $MAX_ROTATIONS ]]; do
+                # Rotate password
+                pw="${pw:1}${pw:0:1}"
 
-        # Rejoin pronunciation parts
-        if [[ ${#pron_parts[@]} -gt 0 ]]; then
-            rotated_comment=$(IFS=- ; echo "${pron_parts[*]}")
-            comment="($rotated_comment)"
+                # Rotate pronunciation parts in parallel
+                if [[ ${#pron_parts[@]} -gt 0 ]]; then
+                    pron_parts=("${pron_parts[@]:1}" "${pron_parts[0]}")
+                fi
+
+                ((count++))
+            done
+
+            # Rejoin pronunciation parts
+            if [[ ${#pron_parts[@]} -gt 0 ]]; then
+                rotated_comment=$(IFS=- ; echo "${pron_parts[*]}")
+                comment="($rotated_comment)"
+            fi
         fi
 
         if [ ! $NOWARN ]; then
