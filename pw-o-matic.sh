@@ -3,7 +3,7 @@
 # according to the given type of environment flavor and various options. It is also
 # designed with ease of use and customization in mind.
 # *REQUIREMENTS - apg (Automated Password Generator) (https://github.com/jabenninghoff/apg)
-# v1.1.6
+# v1.1.7
 
 show_help () {
     cat <<EOM
@@ -165,19 +165,46 @@ if [ "$FLAVOR" = "oracle" ]; then
                 pw="${pw:1}${pw:0:1}"
                 ((count++))
             done
+
+            # If rotation occurred and we have pronunciation comments, rotate them too
+            if [[ $count -gt 0 && -n "$comment" ]]; then
+                pron="${comment#\(}"
+                pron="${pron%\)}"
+                IFS='-' read -ra pron_parts <<< "$pron"
+
+                if [[ ${#pron_parts[@]} -gt 0 ]]; then
+                    rotation_count=$count
+                    pron_len=${#pron_parts[@]}
+
+                    # Ensure rotation count doesn't exceed array length and avoid division by zero
+                    if [[ $pron_len -gt 0 && $rotation_count -ge $pron_len ]]; then
+                        rotation_count=$((rotation_count % pron_len))
+                    fi
+
+                    # Reconstruct comment by rearranging array elements
+                    if [[ $rotation_count -gt 0 ]]; then
+                        rotated_pron=()
+                        for (( i=rotation_count; i<pron_len; i++ )); do
+                            rotated_pron+=("${pron_parts[$i]}")
+                        done
+                        for (( i=0; i<rotation_count; i++ )); do
+                            rotated_pron+=("${pron_parts[$i]}")
+                        done
+
+                        new_pron=$(IFS='-'; printf '%s' "${rotated_pron[*]}")
+                        comment="($new_pron)"
+                    fi
+                fi
+            fi
         fi
 
         if [ ! $NOWARN ]; then
-            # If apg option includes "pronounceable" and "append pronunciation note" and symbols rotation actually took place,
-            if [[ $count -gt 0 && "$OPTIONS" =~ ([[:blank:]]|^)-t([[:blank:]]|$) && ! "$OPTIONS" =~ ([[:blank:]]|^)-a[[:blank:]]+1([[:blank:]]|$) ]]; then
-                warn='Pronunciation may not match password.'
-            fi
-
-            # If the first character is still not an alphabet,
+            # If the first character is still not an alphabet..
             if [[ ! "${pw:0:1}" =~ [a-zA-Z] ]]; then
                 warn+="${warn:+ }Be careful when using unquoted!"
             fi
         fi
+
         echo ${pw}${comment:+" $comment"}${warn:+" [$warn]"}
     done < <(apg $OPTIONS)
 else
