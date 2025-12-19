@@ -3,7 +3,7 @@
 # according to the given type of environment flavor and various options. It is also
 # designed with ease of use and customization in mind.
 # *REQUIREMENTS - apg (Automated Password Generator) (https://github.com/jabenninghoff/apg)
-# v1.1.7
+# v1.1.8
 
 show_help () {
     cat <<EOM
@@ -157,6 +157,7 @@ if [ "$FLAVOR" = "oracle" ]; then
         count=0
         read pw comment < <(echo $line)
 
+        # If the first character is not an alphabet, sequentially move to the end;
         # Only process if password contains at least one alphabetic character
         if [[ "$pw" =~ [a-zA-Z] ]]; then
             # Split pronunciation before the loop
@@ -168,7 +169,6 @@ if [ "$FLAVOR" = "oracle" ]; then
                 pron_parts=()
             fi
 
-            # If the first character is not an alphabet, sequentially move to the end
             MAX_ROTATIONS=${#pw}
             while [[ ! "${pw:0:1}" =~ [a-zA-Z] && $count -lt $MAX_ROTATIONS ]]; do
                 # Rotate password
